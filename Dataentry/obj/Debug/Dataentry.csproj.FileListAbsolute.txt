@@ -1,0 +1,10 @@
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\bin\Debug\Dataentry.exe.config
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\bin\Debug\Dataentry.exe
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\bin\Debug\Dataentry.pdb
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.csprojResolveAssemblyReference.cache
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.Properties.Resources.resources
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.csproj.GenerateResource.Cache
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.exe
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.pdb
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.Form1.resources
+c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.csproj.ResolveComReference.cache
