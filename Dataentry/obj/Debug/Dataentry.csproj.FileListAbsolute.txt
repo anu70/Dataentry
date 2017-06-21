@@ -6,5 +6,5 @@ c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug
 c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.csproj.GenerateResource.Cache
 c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.exe
 c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.pdb
-c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.Form1.resources
 c:\users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.csproj.ResolveComReference.cache
+C:\Users\anu\documents\visual studio 2017\Projects\Dataentry\Dataentry\obj\Debug\Dataentry.MainWindow.resources

@@ -1,6 +1,6 @@
 ﻿namespace Dataentry
 {
-    partial class Form1
+    partial class MainWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -34,9 +34,7 @@
             this.TextFilePathtextBox = new System.Windows.Forms.TextBox();
             this.TextFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.SaveExcelFileDialog = new System.Windows.Forms.SaveFileDialog();
-            this.ProgressBar = new System.Windows.Forms.StatusStrip();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
-            this.ProgressBar.SuspendLayout();
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.SuspendLayout();
             // 
             // BrowseButton
@@ -87,35 +85,25 @@
             this.SaveExcelFileDialog.FileName = "SaveExcelFileDialog";
             this.SaveExcelFileDialog.Title = "Save As";
             // 
-            // ProgressBar
+            // progressBar1
             // 
-            this.ProgressBar.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripProgressBar1});
-            this.ProgressBar.Location = new System.Drawing.Point(0, 520);
-            this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(752, 22);
-            this.ProgressBar.TabIndex = 4;
-            this.ProgressBar.Text = "statusStrip1";
+            this.progressBar1.Location = new System.Drawing.Point(-3, 530);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(100, 15);
+            this.progressBar1.TabIndex = 4;
             // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
-            // 
-            // Form1
+            // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(752, 542);
-            this.Controls.Add(this.ProgressBar);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.TextFilePathtextBox);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.ConvertToExcelButton);
             this.Controls.Add(this.BrowseButton);
-            this.Name = "Form1";
+            this.Name = "MainWindow";
             this.Text = "Form1";
-            this.ProgressBar.ResumeLayout(false);
-            this.ProgressBar.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -129,8 +117,7 @@
         private System.Windows.Forms.TextBox TextFilePathtextBox;
         private System.Windows.Forms.OpenFileDialog TextFileDialog;
         private System.Windows.Forms.SaveFileDialog SaveExcelFileDialog;
-        private System.Windows.Forms.StatusStrip ProgressBar;
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ProgressBar progressBar1;
     }
 }
 

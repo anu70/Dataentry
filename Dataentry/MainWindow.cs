@@ -5,12 +5,14 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Dataentry
 {
-    public partial class Form1 : Form
+    public partial class MainWindow : Form
     {
         Excel.Application xlApp;
-        public Form1()
+        BackgroundWork backgroundWork;
+        public MainWindow()
         {
             InitializeComponent();
+            
         }
 
         private void ConvertToExcelButton_Click(object sender, EventArgs e)
@@ -28,7 +30,10 @@ namespace Dataentry
                 }
                 else
                 {
-                    BackgroundWork backgroundWork = new BackgroundWork(fileToConvert);
+                    backgroundWork = new BackgroundWork(fileToConvert);
+                    backgroundWork.Progress += new BackgroundWork.ProgressDelegate(DisplayProgess);
+         
+
                     if (!backgroundWork.myConvertor.IsBusy)
                     {
                         ConvertToExcelButton.Enabled = false;
@@ -54,6 +59,7 @@ namespace Dataentry
 
             }
         }
+
         public bool IsExcelInstalled()
         {
             try
@@ -70,5 +76,43 @@ namespace Dataentry
             }
 
         }
+
+        public SaveFileDialog GetSaveFileDialog()
+        {
+            return SaveExcelFileDialog;
+        }
+
+        public Button GetFileToExcelConvertorButton()
+        {
+            return ConvertToExcelButton;
+        }
+
+        public TextBox GetFilePathTextBox()
+        {
+            return TextFilePathtextBox;
+        }
+
+       /** public ProgressBar GetProgressBar()
+        {
+            return progressBar1;
+        }**/
+
+        public void UpdateProgress(int ProgressPercentage)
+        {
+            
+        }
+        public void DisplayProgess( int percent)
+        {
+            if (this.InvokeRequired)
+            {
+                this.Invoke(new BackgroundWork.ProgressDelegate(DisplayProgess), new Object[] {percent });
+            }
+            else
+            {
+                this.progressBar1.Value = percent;
+            }
+        }
+
+
     }
 }

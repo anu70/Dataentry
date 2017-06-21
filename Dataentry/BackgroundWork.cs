@@ -12,12 +12,15 @@ namespace Dataentry
 {
     class BackgroundWork
     {
+        public delegate void ProgressDelegate(int percent);
+        public event ProgressDelegate Progress;
         public BackgroundWorker myConvertor;
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
         Excel.Application xlApp;
         object misValue;
         String fileToConvert;
+        MainWindow mainWindow;
         public BackgroundWork(String fileToConvert)
         {
             myConvertor = new BackgroundWorker();
@@ -27,33 +30,74 @@ namespace Dataentry
             myConvertor.WorkerReportsProgress = true;
             myConvertor.WorkerSupportsCancellation = false;
             this.fileToConvert = fileToConvert;
+            mainWindow = new MainWindow();
         }
 
         private void MyConvertor_DoWork(object sender, DoWorkEventArgs e)
         {
             BackgroundWorker sendingWorker = (BackgroundWorker)sender;//Capture the BackgroundWorker that fired the event
             xlApp = (Excel.Application)e.Argument;
-            String line;
+
             misValue = System.Reflection.Missing.Value;
 
-            xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            try{
+                xlWorkBook = xlApp.Workbooks.Add(misValue);
+                xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-            //Pass the file path and file name to the StreamReader constructor
-            StreamReader sr = new StreamReader(fileToConvert);
+                //Pass the file path and file name to the StreamReader constructor
+                StreamReader sr = new StreamReader(fileToConvert);
 
-            //Read the first line of text
+                Console.Write("Do work");
+                String[] columns = {"SR.NO.", "NAME", "PAN NUMBER", "RANK", "GROSS SALARY", "DEDUCTION", "TOTAL INCOME"};
+                for (int j = 0; j < columns.Length; j++)
+                    xlWorkSheet.Cells[1, j + 1] = columns[j];
 
-            line = sr.ReadLine();
+                DecodeTextFile(sr, sendingWorker);
+                //close the file
+                sr.Close();
+            }
+            catch(Exception exception)
+            {
+               
+            }
+            
+        }
+
+        private void MyConvertor_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            SaveFileDialog saveFileDialog = mainWindow.GetSaveFileDialog();
+            saveFileDialog.ShowDialog();
+            xlWorkBook.SaveAs(saveFileDialog.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlWorkBook.Close(true, misValue, misValue);
+            xlApp.Quit();
+
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
+            Button button = mainWindow.GetFileToExcelConvertorButton();
+            button.Enabled = true;
+            if (e.Error == null)
+            {
+                MessageBox.Show("Excel file created");
+                TextBox textBox = mainWindow.GetFilePathTextBox();
+                textBox.Text = "";
+            }
+            else
+            {
+                MessageBox.Show("Error");
+            }
+
+        }
+        public void MyConvertor_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            Progress?.Invoke(e.ProgressPercentage);
+        }
+
+        private void DecodeTextFile(StreamReader sr, BackgroundWorker sendingWorker)
+        {
+            String line = sr.ReadLine();
             line = line.Trim();
             int totalLines = File.ReadAllLines(fileToConvert).Length;
-
-            xlWorkSheet.Cells[1, 2] = "NAME";
-            xlWorkSheet.Cells[1, 3] = "PAN Number";
-            xlWorkSheet.Cells[1, 4] = "RANK";
-            xlWorkSheet.Cells[1, 5] = "GROSS SALARY";
-            xlWorkSheet.Cells[1, 6] = "DEDUCTION";
-            xlWorkSheet.Cells[1, 7] = "TOTAL INCOME";
             int i = 2;
             int lineNum = 1;
 
@@ -167,37 +211,10 @@ namespace Dataentry
                 if (line != null)
                     line = line.Trim();
                 int per = (lineNum * 100) / totalLines;
+               
                 sendingWorker.ReportProgress(per);//Report our progress to the main thread
                 lineNum++;
             }
-
-            //close the file
-            sr.Close();
-        }
-
-        private void MyConvertor_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            //SaveFileDialog1.ShowDialog();
-            xlWorkBook.SaveAs("testing.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
-
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-            if (e.Error == null)
-            {
-                MessageBox.Show("Excel file created");
-            }
-            else
-            {
-                MessageBox.Show("Error");
-            }
-
-        }
-        private void MyConvertor_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
         }
     }
 }
