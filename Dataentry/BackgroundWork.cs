@@ -47,7 +47,7 @@ namespace Dataentry
                 //Pass the file path and file name to the StreamReader constructor
                 StreamReader sr = new StreamReader(fileToConvert);
 
-                Console.Write("Do work");
+                //Console.Write("Do work");
                 String[] columns = {"SR.NO.", "NAME", "PAN NUMBER", "RANK", "GROSS SALARY", "DEDUCTION", "TOTAL INCOME"};
                 for (int j = 0; j < columns.Length; j++)
                     xlWorkSheet.Cells[1, j + 1] = columns[j];
@@ -65,26 +65,51 @@ namespace Dataentry
 
         private void MyConvertor_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            SaveFileDialog saveFileDialog = mainWindow.GetSaveFileDialog();
-            saveFileDialog.ShowDialog();
-            xlWorkBook.SaveAs(saveFileDialog.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
-            xlWorkBook.Close(true, misValue, misValue);
-            xlApp.Quit();
-
-            Marshal.ReleaseComObject(xlWorkSheet);
-            Marshal.ReleaseComObject(xlWorkBook);
-            Marshal.ReleaseComObject(xlApp);
-            Button button = mainWindow.GetFileToExcelConvertorButton();
-            button.Enabled = true;
             if (e.Error == null)
             {
-                MessageBox.Show("Excel file created");
+                try
+                {
+                    SaveFileDialog saveFileDialog = mainWindow.GetSaveFileDialog();
+                    DialogResult result = saveFileDialog.ShowDialog();
+
+                    if (result == DialogResult.OK)
+                    {
+                        try {
+                            xlWorkBook.SaveAs(saveFileDialog.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                            MessageBox.Show("Excel file created");
+                        }
+                        catch(Exception exception)
+                        {
+                            MessageBox.Show("Excel file can not be saved");
+                        }
+                        
+                    }
+                    else
+                    {
+                        MessageBox.Show("Excel file not created");
+                    }
+
+                    xlWorkBook.Close(false, misValue, misValue);
+                    xlApp.Quit();
+                }
+                catch (Exception exception)
+                {
+                    MessageBox.Show(exception.Message);
+                }
+
+
+                Marshal.ReleaseComObject(xlWorkSheet);
+                Marshal.ReleaseComObject(xlWorkBook);
+                Marshal.ReleaseComObject(xlApp);
+                Button button = mainWindow.GetFileToExcelConvertorButton();
+                button.Enabled = true;
                 TextBox textBox = mainWindow.GetFilePathTextBox();
                 textBox.Text = "";
+                Progress?.Invoke(0);
             }
             else
             {
-                MessageBox.Show("Error");
+                MessageBox.Show(e.ToString());
             }
 
         }

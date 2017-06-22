@@ -92,15 +92,6 @@ namespace Dataentry
             return TextFilePathtextBox;
         }
 
-       /** public ProgressBar GetProgressBar()
-        {
-            return progressBar1;
-        }**/
-
-        public void UpdateProgress(int ProgressPercentage)
-        {
-            
-        }
         public void DisplayProgess( int percent)
         {
             if (this.InvokeRequired)
@@ -109,7 +100,7 @@ namespace Dataentry
             }
             else
             {
-                this.progressBar1.Value = percent;
+                this.toolStripProgressBar1.Value = percent;
             }
         }
 
