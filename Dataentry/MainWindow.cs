@@ -32,7 +32,8 @@ namespace Dataentry
                 {
                     backgroundWork = new BackgroundWork(fileToConvert);
                     backgroundWork.Progress += new BackgroundWork.ProgressDelegate(DisplayProgess);
-         
+                    backgroundWork.MakeUIEnabled += new BackgroundWork.EnableUI(EnableUIControls);
+
 
                     if (!backgroundWork.myConvertor.IsBusy)
                     {
@@ -82,16 +83,6 @@ namespace Dataentry
             return SaveExcelFileDialog;
         }
 
-        public Button GetFileToExcelConvertorButton()
-        {
-            return ConvertToExcelButton;
-        }
-
-        public TextBox GetFilePathTextBox()
-        {
-            return TextFilePathtextBox;
-        }
-
         public void DisplayProgess( int percent)
         {
             if (this.InvokeRequired)
@@ -102,6 +93,13 @@ namespace Dataentry
             {
                 this.toolStripProgressBar1.Value = percent;
             }
+        }
+
+        public void EnableUIControls(bool shdEnable)
+        {
+            ConvertToExcelButton.Enabled = shdEnable;
+            TextFilePathtextBox.Text = "";
+
         }
 
 

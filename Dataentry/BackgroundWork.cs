@@ -14,6 +14,8 @@ namespace Dataentry
     {
         public delegate void ProgressDelegate(int percent);
         public event ProgressDelegate Progress;
+        public delegate void EnableUI(bool shdEnable);
+        public event EnableUI MakeUIEnabled;
         public BackgroundWorker myConvertor;
         Excel.Workbook xlWorkBook;
         Excel.Worksheet xlWorkSheet;
@@ -49,9 +51,11 @@ namespace Dataentry
 
                 //Console.Write("Do work");
                 String[] columns = {"SR.NO.", "NAME", "PAN NUMBER", "RANK", "GROSS SALARY", "DEDUCTION", "TOTAL INCOME"};
+                
                 for (int j = 0; j < columns.Length; j++)
+                {
                     xlWorkSheet.Cells[1, j + 1] = columns[j];
-
+                }
                 DecodeTextFile(sr, sendingWorker);
                 //close the file
                 sr.Close();
@@ -75,12 +79,15 @@ namespace Dataentry
                     if (result == DialogResult.OK)
                     {
                         try {
+                            xlWorkSheet.Rows.AutoFit();
+                            xlWorkSheet.Columns.AutoFit();
+                            xlWorkSheet.Cells[1, 1].EntireRow.Font.Bold = true;
                             xlWorkBook.SaveAs(saveFileDialog.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
                             MessageBox.Show("Excel file created");
                         }
                         catch(Exception exception)
                         {
-                            MessageBox.Show("Excel file can not be saved");
+                            MessageBox.Show(exception.Message);
                         }
                         
                     }
@@ -96,21 +103,17 @@ namespace Dataentry
                 {
                     MessageBox.Show(exception.Message);
                 }
-
-
-                Marshal.ReleaseComObject(xlWorkSheet);
-                Marshal.ReleaseComObject(xlWorkBook);
-                Marshal.ReleaseComObject(xlApp);
-                Button button = mainWindow.GetFileToExcelConvertorButton();
-                button.Enabled = true;
-                TextBox textBox = mainWindow.GetFilePathTextBox();
-                textBox.Text = "";
-                Progress?.Invoke(0);
             }
             else
             {
                 MessageBox.Show(e.ToString());
             }
+
+            Marshal.ReleaseComObject(xlWorkSheet);
+            Marshal.ReleaseComObject(xlWorkBook);
+            Marshal.ReleaseComObject(xlApp);
+            MakeUIEnabled?.Invoke(true);
+            Progress?.Invoke(0);
 
         }
         public void MyConvertor_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -148,6 +151,7 @@ namespace Dataentry
                         {
                             result = "";
                         }
+                        xlWorkSheet.Cells[i, 1] = i - 1;
                         xlWorkSheet.Cells[i, 2] = result;
                     }
 
