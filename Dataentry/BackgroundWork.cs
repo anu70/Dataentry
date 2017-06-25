@@ -15,6 +15,8 @@ namespace Dataentry
         public delegate void ProgressDelegate(int percent);
         public event ProgressDelegate Progress;
         public delegate void EnableUI(bool shdEnable);
+        public delegate void AddSkippedItems(String str);
+        public event AddSkippedItems AddItem;
         public event EnableUI MakeUIEnabled;
         public BackgroundWorker myConvertor;
         Excel.Workbook xlWorkBook;
@@ -22,6 +24,7 @@ namespace Dataentry
         Excel.Application xlApp;
         object misValue;
         String fileToConvert;
+        List<String> itemsList;
         MainWindow mainWindow;
         public BackgroundWork(String fileToConvert)
         {
@@ -31,6 +34,7 @@ namespace Dataentry
             myConvertor.ProgressChanged += new ProgressChangedEventHandler(MyConvertor_ProgressChanged);
             myConvertor.WorkerReportsProgress = true;
             myConvertor.WorkerSupportsCancellation = false;
+            itemsList = new List<String>();
             this.fileToConvert = fileToConvert;
             mainWindow = new MainWindow();
         }
@@ -63,8 +67,7 @@ namespace Dataentry
             catch(Exception exception)
             {
                
-            }
-            
+            }  
         }
 
         private void MyConvertor_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -83,11 +86,19 @@ namespace Dataentry
                             xlWorkSheet.Columns.AutoFit();
                             xlWorkSheet.Cells[1, 1].EntireRow.Font.Bold = true;
                             xlWorkBook.SaveAs(saveFileDialog.FileName, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+                            for(int i=0;i<itemsList.Count;i++)
+                                AddItem?.Invoke((i+1)+". "+itemsList[i]);
                             MessageBox.Show("Excel file created");
                         }
                         catch(Exception exception)
                         {
-                            MessageBox.Show(exception.Message);
+                            String msg = exception.Message.ToString();
+                            if (msg.StartsWith("Cannot access"))
+                                MessageBox.Show("Excel file is already open. Please close it and try again");
+                            else if (msg.Equals("Exception from HRESULT: 0x800A03EC"))
+                                MessageBox.Show("Excel file not replaced");
+                            else
+                                MessageBox.Show(msg);
                         }
                         
                     }
@@ -126,7 +137,7 @@ namespace Dataentry
             String line = sr.ReadLine();
             line = line.Trim();
             int totalLines = File.ReadAllLines(fileToConvert).Length;
-            int i = 2;
+            int i = 1;
             int lineNum = 1;
 
             //Continue to read until you reach end of file
@@ -138,7 +149,7 @@ namespace Dataentry
 
                     if (line.StartsWith("Name"))
                     {
-
+                        i++;
                         int pFrom = line.IndexOf("Name and Address of the Employer  Name:-") + "Name and Address of the Employer  Name:-".Length;
                         int pTo = line.IndexOf("Page");
                         int len = pTo - pFrom;
@@ -149,7 +160,20 @@ namespace Dataentry
                         }
                         else
                         {
-                            result = "";
+                            pFrom = line.IndexOf("Name and Address of the Employer  Name:-") + "Name and Address of the Employer  Name:-".Length;
+                            pTo = line.IndexOf("age");
+                            len = pTo - pFrom;
+                            
+                            if (len > 0 && pFrom >= 0)
+                            {
+                                result = line.Substring(pFrom, len);
+                                result = result.Trim();
+                            }
+                            else
+                            {
+                                result = "";
+                                itemsList.Add("Sr.No " + (i - 1) + " Name Column");
+                            }
                         }
                         xlWorkSheet.Cells[i, 1] = i - 1;
                         xlWorkSheet.Cells[i, 2] = result;
@@ -166,6 +190,7 @@ namespace Dataentry
                         else
                         {
                             result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
                         }
                         xlWorkSheet.Cells[i, 3] = result;
 
@@ -181,6 +206,7 @@ namespace Dataentry
                         else
                         {
                             result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
                         }
                         xlWorkSheet.Cells[i, 5] = result;
 
@@ -197,6 +223,7 @@ namespace Dataentry
                         else
                         {
                             result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
                         }
                         xlWorkSheet.Cells[i, 6] = result;
 
@@ -215,9 +242,9 @@ namespace Dataentry
                         else
                         {
                             result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
                         }
                         xlWorkSheet.Cells[i, 7] = result;
-                        i++;
                     }
                     else if (line.Contains("Rank"))
                     {
@@ -230,6 +257,7 @@ namespace Dataentry
                         else
                         {
                             result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
                         }
                         xlWorkSheet.Cells[i, 4] = result;
                     }

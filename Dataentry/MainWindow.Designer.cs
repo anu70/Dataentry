@@ -36,6 +36,8 @@
             this.SaveExcelFileDialog = new System.Windows.Forms.SaveFileDialog();
             this.ProgressBar = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.SkippedItemsList = new System.Windows.Forms.ListView();
+            this.ClearList = new System.Windows.Forms.Button();
             this.ProgressBar.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -93,7 +95,7 @@
             this.toolStripProgressBar1});
             this.ProgressBar.Location = new System.Drawing.Point(0, 520);
             this.ProgressBar.Name = "ProgressBar";
-            this.ProgressBar.Size = new System.Drawing.Size(752, 22);
+            this.ProgressBar.Size = new System.Drawing.Size(907, 22);
             this.ProgressBar.TabIndex = 5;
             this.ProgressBar.Text = "ProgressBar";
             // 
@@ -102,11 +104,31 @@
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 16);
             // 
+            // SkippedItemsList
+            // 
+            this.SkippedItemsList.Location = new System.Drawing.Point(12, 196);
+            this.SkippedItemsList.Name = "SkippedItemsList";
+            this.SkippedItemsList.Size = new System.Drawing.Size(415, 282);
+            this.SkippedItemsList.TabIndex = 6;
+            this.SkippedItemsList.UseCompatibleStateImageBehavior = false;
+            // 
+            // ClearList
+            // 
+            this.ClearList.Location = new System.Drawing.Point(351, 454);
+            this.ClearList.Name = "ClearList";
+            this.ClearList.Size = new System.Drawing.Size(75, 23);
+            this.ClearList.TabIndex = 7;
+            this.ClearList.Text = "Clear List";
+            this.ClearList.UseVisualStyleBackColor = true;
+            this.ClearList.Click += new System.EventHandler(this.ClearList_Click);
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(752, 542);
+            this.ClientSize = new System.Drawing.Size(907, 542);
+            this.Controls.Add(this.ClearList);
+            this.Controls.Add(this.SkippedItemsList);
             this.Controls.Add(this.ProgressBar);
             this.Controls.Add(this.TextFilePathtextBox);
             this.Controls.Add(this.label1);
@@ -114,6 +136,7 @@
             this.Controls.Add(this.BrowseButton);
             this.Name = "MainWindow";
             this.Text = "Form1";
+            this.Load += new System.EventHandler(this.MainWindow_Load);
             this.ProgressBar.ResumeLayout(false);
             this.ProgressBar.PerformLayout();
             this.ResumeLayout(false);
@@ -131,6 +154,8 @@
         private System.Windows.Forms.SaveFileDialog SaveExcelFileDialog;
         private System.Windows.Forms.StatusStrip ProgressBar;
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ListView SkippedItemsList;
+        private System.Windows.Forms.Button ClearList;
     }
 }
 

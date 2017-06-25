@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.Threading;
 
 namespace Dataentry
 {
@@ -11,8 +12,10 @@ namespace Dataentry
         BackgroundWork backgroundWork;
         public MainWindow()
         {
-            InitializeComponent();
             
+           InitializeComponent();
+            SkippedItemsList.View = View.List;
+
         }
 
         private void ConvertToExcelButton_Click(object sender, EventArgs e)
@@ -33,7 +36,7 @@ namespace Dataentry
                     backgroundWork = new BackgroundWork(fileToConvert);
                     backgroundWork.Progress += new BackgroundWork.ProgressDelegate(DisplayProgess);
                     backgroundWork.MakeUIEnabled += new BackgroundWork.EnableUI(EnableUIControls);
-
+                    backgroundWork.AddItem += new BackgroundWork.AddSkippedItems(AddSkippedItem);
 
                     if (!backgroundWork.myConvertor.IsBusy)
                     {
@@ -50,6 +53,7 @@ namespace Dataentry
 
         private void BrowseButton_Click(object sender, EventArgs e)
         {
+            SkippedItemsList.Items.Clear();
             DialogResult result = TextFileDialog.ShowDialog();
             if (result == DialogResult.OK) // Test result.
             {
@@ -102,6 +106,20 @@ namespace Dataentry
 
         }
 
+        public void AddSkippedItem(String str)
+        {
+            SkippedItemsList.Items.Add(str);
+        }
 
+        private void MainWindow_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void ClearList_Click(object sender, EventArgs e)
+        {
+            SkippedItemsList.Items.Clear();
+        }
     }
 }
+
