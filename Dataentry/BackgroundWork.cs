@@ -54,7 +54,7 @@ namespace Dataentry
                 StreamReader sr = new StreamReader(fileToConvert);
 
                 //Console.Write("Do work");
-                String[] columns = {"SR.NO.", "NAME", "PAN NUMBER", "RANK", "GROSS SALARY", "DEDUCTION", "TOTAL INCOME"};
+                String[] columns = {"SR.NO.", "NAME", "PAN NUMBER", "RANK", "GROSS SALARY", "DEDUCTION", "TOTAL INCOME", "FORCE No.","DCPS", "TAX PAYABLE", "TAX DEDUCTED" };
                 
                 for (int j = 0; j < columns.Length; j++)
                 {
@@ -181,7 +181,22 @@ namespace Dataentry
 
                     else if (line.StartsWith("Force"))
                     {
-                        int pFrom = line.IndexOf("Pan No:-") + "Pan No:-".Length;
+                        int pFrom = line.IndexOf("Force No:") + "Force No:".Length;
+                        int pTo = line.IndexOf("Pan");
+                        int len = pTo - pFrom;
+                        if (len > 0 && pFrom >= 0)
+                        {
+                            result = line.Substring(pFrom, len);
+                            result = result.Trim();
+                        }
+                        else
+                        {
+                            result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
+                        }
+                        xlWorkSheet.Cells[i, 8] = result;
+
+                        pFrom = line.IndexOf("Pan No:-") + "Pan No:-".Length;
                         if (pFrom >= 0)
                         {
                             result = line.Substring(pFrom);
@@ -211,6 +226,25 @@ namespace Dataentry
                         xlWorkSheet.Cells[i, 5] = result;
 
                     }
+
+                    else if (line.StartsWith("DCPS matching Govt"))
+                    {
+                        int pFrom = line.IndexOf("DCPS matching Govt.Contribution") + "DCPS matching Govt.Contribution  ".Length;
+                        if (pFrom >= 0)
+                        {
+                            result = line.Substring(pFrom);
+                            result = result.Trim();
+                        }
+                        else
+                        {
+                            result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
+                        }
+                        xlWorkSheet.Cells[i, 9] = result;
+
+                    }
+                    
+
 
                     else if (line.StartsWith("10."))
                     {
@@ -261,10 +295,45 @@ namespace Dataentry
                         }
                         xlWorkSheet.Cells[i, 4] = result;
                     }
-                }
 
-                //Read the next line
-                line = sr.ReadLine();
+                    else if (line.StartsWith("20"))
+                    {
+                        int pFrom = line.IndexOf("20.TAX PAYABLE") + "20.TAX PAYABLE  ".Length;
+                        if (pFrom >= 0)
+                        {
+                            result = line.Substring(pFrom);
+                            result = result.Trim();
+                        }
+                        else
+                        {
+                            result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
+                        }
+                        xlWorkSheet.Cells[i, 10] = result;
+
+                    }
+
+                    else if (line.StartsWith("21."))
+                    {
+                        int pFrom = line.IndexOf("21. LESS :(a)Tax deducted at source u/s192(I)") + "21. LESS :(a)Tax deducted at source u/s192(I)".Length;
+                        if (pFrom >= 0)
+                        {
+                            result = line.Substring(pFrom);
+                            result = result.Trim();
+                        }
+                        else
+                        {
+                            result = "";
+                            itemsList.Add("Sr.No " + (i - 1) + " Name Column");
+                        }
+                        xlWorkSheet.Cells[i, 11] = result;
+
+                    }
+
+                }
+                
+               //Read the next line
+               line = sr.ReadLine();
                 if (line != null)
                     line = line.Trim();
                 int per = (lineNum * 100) / totalLines;
